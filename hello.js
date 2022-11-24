@@ -61,18 +61,24 @@ const calcArea = (height, minPos, maxPos) => {
   return Math.min(height[minPos], height[maxPos]) * (maxPos - minPos);
 };
 
-//let height = [1, 8, 6, 2, 5, 4, 8, 3, 7];
-let height = [2, 3, 4, 5, 18, 17, 6];
-const maxArea2 = height.reduce((maxArea, value, index) => {
-  let newArea = calcArea(height, index, height.length - 1);
-  if (maxArea < newArea) {
-    return (maxArea = newArea);
-  } else {
+//const height = [1, 8, 6, 2, 5, 4, 8, 3, 7];
+//const height = [2, 3, 4, 5, 18, 17, 6];
+const height = [1, 8, 100, 2, 100, 4, 8, 3, 7];
+const maxAreaCalculate = (array) => {
+  return array.reduce((maxArea, value, index) => {
+    let endPos = array.length - 1;
+    for (let i = index; i < array.length; i++) {
+      let newArea = calcArea(array, i, endPos);
+      if (newArea > maxArea) {
+        maxArea = newArea;
+      }
+      endPos -= 1;
+    }
     return maxArea;
-  }
-}, 0);
+  }, 0);
+};
 
-console.log(maxArea2);
+console.log(maxAreaCalculate(height));
 
 var maxArea = function (height) {
   let minPos = 0;

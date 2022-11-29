@@ -1,4 +1,4 @@
-console.log("press F5 to  using Node");
+console.log("press F5 (mac fn+F5 to debug using Node");
 
 const string = "hello";
 
@@ -57,10 +57,12 @@ Input: height = [1,1]
 Output: 1
 */
 
+// Kyle's calcArea function
 const calcArea = (height, minPos, maxPos) => {
   return Math.min(height[minPos], height[maxPos]) * (maxPos - minPos);
 };
 
+// My busted solution that doesn't work (works but too slow)
 //const height = [1, 8, 6, 2, 5, 4, 8, 3, 7];
 //const height = [2, 3, 4, 5, 18, 17, 6];
 const height = [1, 8, 100, 2, 100, 4, 8, 3, 7];
@@ -78,8 +80,9 @@ const maxAreaCalculate = (array) => {
   }, 0);
 };
 
-console.log(maxAreaCalculate(height));
+//console.log(maxAreaCalculate(height));
 
+// kyle's solution that works (out to in crawl works in all tests)
 var maxArea = function (height) {
   let minPos = 0;
   let maxPos = height.length - 1;

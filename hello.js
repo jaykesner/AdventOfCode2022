@@ -99,4 +99,21 @@ var maxArea = function (height) {
   return maximum;
 };
 
+const arr = [1, 2, 2, 1, 1, 3];
+
+const uniqueOccurrences = (arr) => {
+  const uniques = new Set(arr);
+  const occurrences = [];
+  uniques.forEach((uniqueValue) => {
+    const foundOccurrences = arr.filter((arrayVal) => arrayVal == uniqueValue);
+    occurrences.push(foundOccurrences.length);
+  });
+  const occurencesSet = new Set(occurrences);
+  return occurencesSet.size == occurrences.length;
+};
+
+console.log(uniqueOccurrences(arr));
+
+//const newSet = new Set(arr);
+//console.log(newSet);
 //console.log(maxArea(test));

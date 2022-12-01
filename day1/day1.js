@@ -49,5 +49,27 @@ const topThreeInventories = totalInventories
   .splice(totalInventories.length - 3)
   .reduce((top, total) => (top += total));
 
-console.log(largestInventory);
-console.log(topThreeInventories);
+//console.log(largestInventory); // 71124
+//console.log(topThreeInventories); // 204639
+
+const sortedTotals = input
+  .split("\n")
+  .map((item) => (parseInt(item) ? parseInt(item) : 0)) // map array of strings into numbers, replace newline with 0
+  .reduce((totals, item, index) => {
+    index == 0
+      ? totals.push(item)
+      : item == 0
+      ? totals.push(0)
+      : totals.push(totals.pop() + item);
+    return totals;
+  }, [])
+  .sort((a, b) => a - b);
+
+const largestCarry = sortedTotals.at(-1);
+
+const topThree = sortedTotals
+  .splice(sortedTotals.length - 3)
+  .reduce((top, total) => (top += total));
+
+console.log(largestCarry);
+console.log(topThree);

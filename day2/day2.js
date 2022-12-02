@@ -110,8 +110,6 @@ const scores2 = input.split("\n").map((round) => {
     myNewHand = opponentHand + 1;
     if (opponentHand == 3) {
       myNewHand = 1;
-    } else if (opponentHand == 1) {
-      myNewHand = 2;
     }
     return myNewHand + 6;
   }

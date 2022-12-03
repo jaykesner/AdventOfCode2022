@@ -6,22 +6,6 @@ const input = require("./day2input");
 
 // 0 lost, 3 draw, 6 win
 
-// 1  1   -1 -1
-// 2  2    0  0
-// 3  3    1  1
-
-// rock for 1, paper for 2, 1 so i win
-// paper for 2, rock for 1, -1 so i lose
-// scissors for 3, rock for 1, -2 so i lose (bad)
-// rock for 1, scissors for 3, 2 so i win (bad)
-
-// rock for 1, paper for 2, 1 so i win
-
-// win
-// loss
-// draw
-// win
-
 const testInput = `A Y
 B X
 C Z`;

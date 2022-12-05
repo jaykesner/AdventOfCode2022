@@ -19,11 +19,18 @@ function sameItem(currentSack) {
 }
 
 function compareItems(firstHalf, secondHalf) {
+  const a = new Set(firstHalf);
+  const b = new Set(secondHalf);
+  const intersect = new Set([...a].filter((i) => b.has(i)));
+  //console.log(intersect);
+
+  // old
   const compareHalfs = [...firstHalf].filter((item) => {
     const foundSameItem = [...secondHalf].filter((item2) => item2 == item);
     return foundSameItem[0];
   });
-  return compareHalfs[0];
+  //compareHalfs[0]
+  return intersect.values().next().value;
 }
 
 const sameItems = splitInput.map((currentSack) => sameItem(currentSack));
@@ -62,6 +69,15 @@ for (let i = 0; i < splitInput.length; i += 6) {
 }
 
 function compareThreeSacks(sack1, sack2, sack3) {
+  const a = new Set(sack1);
+  const b = new Set(sack2);
+  const c = new Set(sack3);
+
+  const intersect = new Set([...a].filter((i) => b.has(i)));
+  const intersect2 = new Set([...intersect].filter((i) => c.has(i)));
+  return intersect2.values().next().value;
+
+  // old
   const findSameItem = [...sack1].filter((item) => {
     const foundinSecond = [...sack2].filter((item2) => item2 == item);
     const foundinThird = [...sack3].filter(
@@ -71,7 +87,8 @@ function compareThreeSacks(sack1, sack2, sack3) {
   });
   const singleValue = new Set(findSameItem);
   const iterator = singleValue.values();
-  return iterator.next().value;
+  // interator.next().value
+  return intersect2.values().next().value;
 }
 
 const groupSackValues = groupSack.map((item) => packValue(item));

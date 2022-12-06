@@ -13,9 +13,13 @@ const foundFullPairs = getInput
   .map((input) => compareFullOverlap(input))
   .reduce((total, value) => (total += value));
 
+console.log(foundFullPairs);
+
 const foundAnyPairs = getInput
   .map((input) => compareAnyOverlap(input))
   .reduce((total, value) => (total += value));
+
+console.log(foundAnyPairs);
 
 function compareFullOverlap(inputLine) {
   const splitLine = inputLine.split(",");

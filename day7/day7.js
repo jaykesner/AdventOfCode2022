@@ -24,7 +24,7 @@ $ ls
 5626152 d.ext
 7214296 k`;
 
-const input = testInput;
+const input = fullInput;
 
 const instructions = input.split("\n");
 
@@ -38,12 +38,13 @@ instructions.forEach((line) => {
 });
 //console.log(directoryList);
 
+const directories = [];
 /*
 directoryList.forEach((name) =>
-directories.push({ name: name, size: 0, contains: [] })
-); */
+  directories.push({ name: name, size: 0, contains: [] })
+);
+*/
 
-const directories = [];
 directories.push({ name: "/", size: 0, contains: [] });
 const currentDirectory = ["/"];
 
@@ -65,34 +66,48 @@ instructions.forEach((line, index) => {
       break;
     case 3: // ls
       // find all the next valid outputs
-      const foundOutput = [];
-      for (let i = index + 1; i < instructions.length; i++) {
-        if (parseLine(instructions[i]) === 4) {
-          //console.log("found ls output");
-          foundOutput.push(instructions[i]);
-        } else {
-          break;
-        }
-      }
-      // add dirs to structure or add size of files to dir
+      const foundOutput = parseLsOutput(index);
+
+      // add dirs to structure or add size of files to directories
       foundOutput.forEach((output) => {
-        //console.log(output);
         if (output.split(" ")[0].includes("dir")) {
-          // skip
-          const currentDir = currentDirectory.pop();
-          const dirIndex = directories.findIndex(
-            (dir) => dir.name === currentDir
+          // [DIRECTORY] - add new directory list
+
+          // the letter
+          const foundDirectory = output.split(" ")[1];
+
+          // find and add new directory
+          // create path
+          currentDirectory.push(foundDirectory);
+          const index = directories.findIndex(
+            (dir) => dir.name === currentDirectory.join("/")
           );
-          directories[dirIndex].contains.push(output.split(" ")[1]);
-          currentDirectory.push(currentDir);
+          // didn't find directory, add
+          if (index === -1) {
+            directories.push({
+              name: currentDirectory.join("/"),
+              size: 0,
+              contains: [],
+            });
+          }
+          // save created path
+          const savedPath = currentDirectory.join("/");
+          // Back to /
+          currentDirectory.pop();
+
+          // find current directory and push new found directory into it's contains
+          const dirIndex = directories.findIndex(
+            (dir) => dir.name === currentDirectory.join("/")
+          );
+          directories[dirIndex].contains.push(savedPath);
         } else {
-          //console.log(parseInt(output.split(" ")[0]));
-          const currentDir = currentDirectory.pop();
+          // [FILE] - add size to current directory
+          const fileSize = output.split(" ")[0];
+          const joinCurrent = currentDirectory.join("/");
           const dirIndex = directories.findIndex(
-            (dir) => dir.name === currentDir
+            (dir) => dir.name === joinCurrent
           );
-          currentDirectory.push(currentDir);
-          directories[dirIndex].size += parseInt(output.split(" ")[0]);
+          directories[dirIndex].size += parseInt(fileSize);
         }
       });
       break;
@@ -101,32 +116,7 @@ instructions.forEach((line, index) => {
   }
 });
 
-console.log(JSON.stringify(directories));
-
-let sumOfAllSmallDirs = 0;
-directories.forEach((dir) => {
-  let sum = 0;
-  if (dir.size < 100000) {
-    let containsSum = 0;
-
-    if (dir.contains.length > 0) {
-      dir.contains.forEach((dir) => {
-        const dirIndex = directories.findIndex((d) => d.name === dir);
-        containsSum += directories[dirIndex].size;
-      });
-    }
-
-    if (dir.size + containsSum < 100000) {
-      sum += dir.size + containsSum;
-    }
-  }
-  sumOfAllSmallDirs += sum;
-});
-
 let sum = 0;
-//let testRecursive = ["a", "d"];
-//sumSmall(testRecursive);
-
 function sumSmall(arr) {
   if (arr.length > 0) {
     arr.forEach((dir) => {
@@ -139,43 +129,9 @@ function sumSmall(arr) {
   }
 }
 
-//const pruneDirectories = directories.filter((dir) => dir.size < 100000);
-const badDirs = [];
-const pruneZero = directories.filter((dir) => {
-  if (dir.size !== 0) {
-    return dir;
-  } else if (dir.contains.length > 0) {
-    return dir;
-  } else {
-    badDirs.push(dir.name);
-  }
-});
+console.log(JSON.stringify(directories));
 
-const badSet = new Set(badDirs);
-const badDirsAll = Array.from(badSet);
-//console.log(badDirsAll);
-//console.log(JSON.stringify(pruneZero));
-
-const removeBadContains = pruneZero.map((dir) => {
-  //return dir;
-  const newDir = { name: dir.name, size: dir.size, contains: dir.contains };
-  badDirsAll.forEach((badDir) => {
-    const foundIndex = newDir.contains.indexOf(badDir);
-    if (foundIndex > -1) {
-      newDir.contains.splice(foundIndex, 1);
-    }
-  });
-  return newDir;
-});
-
-//console.log(JSON.stringify(directories[0]));
-directories.forEach((val) => {
-  //console.log(JSON.stringify(val));
-});
-//console.log(JSON.stringify(removeBadContains));
-
-/*
-const totalSize = removeBadContains.map((dir) => {
+const totalSize = directories.map((dir) => {
   let dirSize = dir.size;
   sum = 0;
   sumSmall(dir.contains);
@@ -191,14 +147,36 @@ const sumOfSmall = totalSize.reduce((total, dir) => {
   }
 }, 0);
 
-
 console.log(JSON.stringify(totalSize));
-console.log(sumOfSmall);
-*/
+console.log(`Part 1: ${sumOfSmall}`); // test data 95437, real data 1444896
+const baseDirectorySize = totalSize[0].size;
+const unusedSpace = 70000000 - baseDirectorySize;
+console.log(`70000000 - ${baseDirectorySize} = ${unusedSpace} unused`); // 29610082
+const neededSpace = 30000000 - unusedSpace;
+console.log(`30000000 - ${unusedSpace} = ${neededSpace} needed`);
 
-// OLD
-//console.log(JSON.stringify(directories));
-//console.log(sumOfAllSmallDirs);
+const foundDirs = totalSize
+  .filter((dir) => {
+    if (dir.size >= neededSpace) {
+      return dir;
+    }
+  })
+  .map((val) => val.size)
+  .sort((a, b) => a - b);
+
+console.log(`Part 2: ${foundDirs[0]}`); // test data 24933642, real data 404395
+
+function parseLsOutput(index) {
+  let output = [];
+  for (let i = index + 1; i < instructions.length; i++) {
+    if (parseLine(instructions[i]) === 4) {
+      output.push(instructions[i]);
+    } else {
+      break;
+    }
+  }
+  return output;
+}
 
 function parseLine(instruction) {
   if (firstCharIsDollar(instruction)) {
@@ -243,7 +221,7 @@ function changeOuter(str) {
   return str[5] === "/";
 }
 
-// oh no
+//
 // initialize empty stack to keep track of directories
 /*
 const stack = [];

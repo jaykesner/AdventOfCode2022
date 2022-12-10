@@ -98,13 +98,13 @@ const coordsTotal = coords.reduce(
   0
 );
 
-console.log(coordsTotal);
+console.log(`Part 1: ${coordsTotal}`);
 
 const coordsScores = coords
   .map((i) => i.scenicScore)
   .filter((i) => i)
   .sort((a, b) => b - a);
-console.log(coordsScores[0]);
+console.log(`Part 2: ${coordsScores[0]}`);
 
 // part 1 t:21 r:1803
 //part t:8 r:2268912
@@ -113,46 +113,30 @@ console.log(coordsScores[0]);
 
 function checkTreeVisibility(rowPos, columnPos, treeToTest) {
   let treeHeight = treeToTest;
-  // look left
   let leftCheck = true;
   let rightCheck = true;
   let downCheck = true;
   let upCheck = true;
+  // look left
   for (let i = 0; i < rowPos; i++) {
-    /*
-    console.log(
-      `looked left x:${i} treeH: ${findTreeDataHeight(i, columnPos)}`
-    );
-    */
     if (findTreeDataHeight(i, columnPos) >= treeHeight) {
       leftCheck = false;
     }
   }
   // look right
   for (let i = rowPos + 1; i <= xMax; i++) {
-    /*
-    console.log(
-      `looked right x:${i} treeH: ${findTreeDataHeight(i, columnPos)}`
-    );
-    */
     if (findTreeDataHeight(i, columnPos) >= treeHeight) {
       rightCheck = false;
     }
   }
   // look down
   for (let i = columnPos + 1; i <= yMax; i++) {
-    /*
-    console.log(`looked down y:${i} treeH: ${findTreeDataHeight(rowPos, i)}`);
-    */
     if (findTreeDataHeight(rowPos, i) >= treeHeight) {
       downCheck = false;
     }
   }
   // look up
   for (let i = 0; i < columnPos; i++) {
-    /*
-    console.log(`looked up y:${i} treeH: ${findTreeDataHeight(rowPos, i)}`);
-    */
     if (findTreeDataHeight(rowPos, i) >= treeHeight) {
       upCheck = false;
     }
@@ -172,57 +156,41 @@ function checkTreeSceneScore(rowPos, columnPos, treeToTest) {
   let upBlocked = false;
   // look left
   for (let i = rowPos - 1; i >= 0; i--) {
-    /*
-    console.log(
-      `looked left x:${i} treeH: ${findTreeDataHeight(i, columnPos)}`
-    );
-    */
     if (findTreeDataHeight(i, columnPos) < treeToTest) {
       if (!leftBlocked) {
         leftScore += 1;
       }
     } else {
-      //console.log("left blocked");
       leftBlocked = true;
     }
   }
   // look right
   for (let i = rowPos + 1; i <= xMax; i++) {
-    /*
-    console.log(
-      `looked right x:${i} treeH: ${findTreeDataHeight(i, columnPos)}`
-    );
-    */
     if (findTreeDataHeight(i, columnPos) < treeToTest) {
       if (!rightBlocked) {
         rightScore += 1;
       }
     } else {
-      //console.log("right blocked");
       rightBlocked = true;
     }
   }
   // look down
   for (let i = columnPos + 1; i <= yMax; i++) {
-    //console.log(`looked down y:${i} treeH: ${findTreeDataHeight(rowPos, i)}`);
     if (findTreeDataHeight(rowPos, i) < treeToTest) {
       if (!downBlocked) {
         downScore += 1;
       }
     } else {
-      //console.log("down blocked");
       downBlocked = true;
     }
   }
   // look up
   for (let i = columnPos - 1; i >= 0; i--) {
-    //console.log(`looked up y:${i} treeH: ${findTreeDataHeight(rowPos, i)}`);
     if (findTreeDataHeight(rowPos, i) < treeToTest) {
       if (!upBlocked) {
         upScore += 1;
       }
     } else {
-      //console.log("up blocked");
       upBlocked = true;
     }
   }
@@ -238,7 +206,6 @@ function checkTreeSceneScore(rowPos, columnPos, treeToTest) {
   if (downBlocked) {
     downScore += 1;
   }
-  //console.log(`${upScore} ${leftScore} ${downScore} ${rightScore}`);
   return leftScore * upScore * downScore * rightScore;
 }
 
@@ -251,7 +218,6 @@ function findTreeDataHeight(x, y) {
 }
 
 function findTreeIndex(x, y) {
-  //const coord = coords.filter((coord) => x === coord.x && y === coord.y);
   const coord = coords.findIndex((coord) => x === coord.x && y === coord.y);
   return coord;
 }

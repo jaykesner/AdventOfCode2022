@@ -91,7 +91,7 @@ function main(useRealData) {
 
   //console.log(JSON.stringify(coords));
 }
-main(true);
+main(false);
 
 const coordsTotal = coords.reduce(
   (total, coord) => (coord.visible ? (total += 1) : (total += 0)),
@@ -105,6 +105,9 @@ const coordsScores = coords
   .filter((i) => i)
   .sort((a, b) => b - a);
 console.log(coordsScores[0]);
+
+// part 1 t:21 r:1803
+//part t:8 r:2268912
 
 //console.log(JSON.stringify(coords));
 
